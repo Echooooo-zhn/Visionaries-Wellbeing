@@ -4,6 +4,8 @@ import React, { useMemo } from "react";
 import styled, { css } from "styled-components";
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const Avatar = styled.img`
   height: 30px;
@@ -18,13 +20,11 @@ const CardHeader = styled.div`
 
 const Author = styled.div`
   display: flex;
-  align-items: center;
 `;
 const CardFooter = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 `;
 
 const DragItem = styled.div`
@@ -40,9 +40,8 @@ const DragItem = styled.div`
 
 
 const ListItem = (props) => {
-  console.log(props);
   return (
-    <Draggable draggableId={props.id} index={props.index}>
+    <Draggable key={props.id} draggableId={props.id} index={props.index}>
       {(provided, snapshot) => {
         return (
           <DragItem
@@ -51,18 +50,33 @@ const ListItem = (props) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <CardHeader>{props.item.question}</CardHeader>
-            <span>{props.item.description}</span>
+            <CardHeader style={{fontWeight: 'bold'}}>
+              <div style={{textAlign: 'right'}}>
+                <IconButton aria-label="settings" 
+                  onClick={()=>{props.handleDelete(props.list, props.index, props.rid, props.prefix)}}
+                  >
+                  <DeleteForeverIcon />
+                </IconButton>
+              </div>
+              <div>
+                {props.item.title}
+              </div>
+            </CardHeader>
             <CardFooter>
               <Author>
-                <Chip label={props.item.category} />
+                <Chip label={props.item.category.category_name} />
                 {props.item.image === null
                   ? <Avatar
                     src={props.item.image}
                   />
                   : <></>
                 }
-                <Button>Review</Button>
+                <Button 
+                  style={{fontWeight: 'bold', right: '0px'}}
+                  onClick={()=> {props.setClickedItem(props.item); props.setDialogOpen(true)}}
+                >
+                  Review
+                </Button>
               </Author>
             </CardFooter>
           </DragItem>

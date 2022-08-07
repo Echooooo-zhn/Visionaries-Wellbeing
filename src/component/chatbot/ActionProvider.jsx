@@ -1,10 +1,11 @@
 import { apiCall } from '../../Main';
-
+import { useNavigate } from 'react-router-dom';
 class ActionProvider {
   constructor(createChatBotMessage, setStateFunc, createClientMessage) {
     this.createChatBotMessage = createChatBotMessage;
     this.setState = setStateFunc;
     this.createClientMessage = createClientMessage;
+    this.navigate = useNavigate();
   }
 
   handleMeeting = () => {
@@ -26,8 +27,12 @@ class ActionProvider {
     this.setChatbotMessage(message);
   }
 
-  handleQuestion = (text) => {
-    apiCall('/chatbot', 'POST', { state: 1, input_text: text })
+  handleQuestion = async (text) => {
+    const data = await apiCall('/chatbot', 'POST', { state: 1, input_text: text }, this.navigate);
+    if (typeof (data) === 'string' && (!data.startsWith('200') || !data.startsWith('201'))) {
+      this.navigate('/login');
+      return;
+    }
     const message = this.createChatBotMessage(
       "Sure! Which type of information you would like to get?",
       {
@@ -38,17 +43,18 @@ class ActionProvider {
   };
   handleVideos = async () => {
     const send = await apiCall('/chatbot', 'POST', { state: 2, input_text: 'video' })
-    console.log(send);
+
+    this.setState((state) => ({
+      ...state,
+      src: send,
+    }));
     const message = this.createChatBotMessage(
-      `Ok, heres are some video link you can have a look relate to your question
-             `,
+      `Ok, heres are some video link you can have a look relate to your question`,
+      {
+        widget: "herfWidget"
+      }
     );
     this.setChatbotMessage(message);
-    send.map((s) => {
-      const message2 = this.createChatBotMessage(s)
-      this.setChatbotMessage(message2);
-    })
-
     const message7 = this.createChatBotMessage(
       "Do you satisfied with this result or do want want to see some related questions?",
       {
@@ -59,11 +65,20 @@ class ActionProvider {
   };
   handleGuides = async () => {
     const send = await apiCall('/chatbot', 'POST', { state: 2, input_text: 'guide' })
-    console.log(send);
-    send.map((s) => {
-      const message2 = this.createChatBotMessage(s)
-      this.setChatbotMessage(message2);
-    })
+
+    this.setState((state) => ({
+      ...state,
+      src: send,
+
+    }));
+    const message = this.createChatBotMessage(
+      `Ok, heres are some solution to your questions`,
+      {
+        widget: "herfGuideWidget"
+      }
+    );
+    this.setChatbotMessage(message);
+
     const message3 = this.createChatBotMessage(
       "Do you still have some questions relate to this topic? You can post an question on our website or see some related questions.",
       {
@@ -73,16 +88,23 @@ class ActionProvider {
     this.setChatbotMessage(message3);
   };
   handleRelate = async () => {
-    const send = await apiCall('/chatbot', 'POST', { state: 3, input_text: 'relate' })
+    const send = await apiCall('/chatbot', 'POST', { state: 3, input_text: 'related' })
     console.log(send);
-    const message = this.createChatBotMessage(
-      "Here are several related questions, you can ask me by sending me message",
-    );
-    this.setChatbotMessage(message);
-    send.map((s) => {
-      const message2 = this.createChatBotMessage(s)
-      this.setChatbotMessage(message2);
-    })
+    if (send.text.length !== 0) {
+      const message = this.createChatBotMessage(
+        "Here are several related questions, you can ask me by sending me message",
+      );
+      this.setChatbotMessage(message);
+      send.text.map((s) => {
+        const message2 = this.createChatBotMessage(s)
+        this.setChatbotMessage(message2);
+      })
+    } else {
+      const message = this.createChatBotMessage(
+        "Here are no related questions",
+      );
+      this.setChatbotMessage(message);
+    }
 
 
   };
@@ -162,6 +184,7 @@ class ActionProvider {
   };
 
   handleGreeting = () => {
+    apiCall('/chatbot', 'POST', { state: 3, input_text: 'true' })
     const message = this.createChatBotMessage(
       "Thanks for trying Wellbeing Bot! We hope you had a great experience"
     );
@@ -170,9 +193,7 @@ class ActionProvider {
   messageHandler = () => {
     const message = this.createChatBotMessage(
       "Hello, ask me anything",
-      {
-        widget: "options"
-      }
+
     );
     this.setChatbotMessage(message);
   };
@@ -183,6 +204,7 @@ class ActionProvider {
     this.setChatbotMessage(message);
   };
   handleSorry = () => {
+    apiCall('/chatbot', 'POST', { state: 3, input_text: 'false' })
     const message = this.createChatBotMessage(
       "I am sorry that I do not find those infromations you want :( . You can ask a new questions or ask your previous questions more detailed."
     );

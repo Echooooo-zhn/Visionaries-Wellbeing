@@ -5,20 +5,30 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { apiCall } from '../Main';
-
-
+import { useNavigate } from 'react-router-dom';
+import ExpertHeader from '../component/ExpertHeader';
+import { styled } from '@mui/material/styles';
+import PageReturnButton from '../component/PageReturnButton';
 
 const theme = createTheme();
 
+// style for button color
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText('#000000'),
+  backgroundColor: '#000000',
+  '&:hover': {
+    backgroundColor: '#000000',
+  },
+}));
+
 export default function AddExpert() {
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -30,14 +40,29 @@ export default function AddExpert() {
       interested_category_ids: interested_category_ids
 
     });
-    const data2 = await apiCall('/register_expert_account', 'POST', body);
+    const nameReg = new RegExp(/^[0-9A-Za-z]+ [0-9A-Za-z]+/);
+    const reg = new RegExp(/^([a-zA-Z0-9._-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/);
+    if (data.get('name').length < 3) {
+      alert('The expert name should have at least 3 characters');
+    } else if (!(nameReg.test(data.get('name')))) {
+      alert('The expert name format should be "Firstname Lastname"');
+    } else if (!(reg.test(data.get('email')))) {
+      alert('The expert email format is not valid');
+    } else {
+      const data2 = await apiCall('/register_expert_account', 'POST', body, navigate);
+      if (typeof (data2) === 'string' && (!data2.startsWith('200') || !data2.startsWith('201'))) {
+        alert('something wrong')
+      } else {
+        alert('You have successfully add an expert');
+      }
+    }
   };
   const setChecked = (value, index) => {
     categories[index].checked = value;
   }
   const [categories, setCategories] = React.useState([]);
   const getCategories = async () => {
-    const data = await apiCall('/categories', 'GET');
+    const data = await apiCall('/categories', 'GET', {}, navigate);
     data.categories.map((categorie, i) => { categorie.checked = false; return categorie });
     setCategories(data.categories);
   };
@@ -48,8 +73,19 @@ export default function AddExpert() {
   }
   return (
     <ThemeProvider theme={theme}>
+      <ExpertHeader/>
+      <div style={{display:'flex', alignItems: 'flex-end', justifyContent: 'flex-end', width: '85%', paddingTop: '50px'}}>
+        <button 
+          variant="outlined" 
+          style={{backgroundColor: '#000000', color: 'white', right: '0px'}} 
+          onClick={() => { navigate('/expert_main') }}
+        >
+          Return
+        </button>
+      </div>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        
         <Box
           sx={{
             marginTop: 8,
@@ -58,7 +94,8 @@ export default function AddExpert() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main', backgroundColor: '#000000', color: 'white' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -108,14 +145,14 @@ export default function AddExpert() {
               }
             </div>
 
-            <Button
+            <ColorButton
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Submit
-            </Button>
+            </ColorButton>
           </Box>
         </Box>
       </Container>

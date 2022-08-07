@@ -2,30 +2,26 @@ import React from 'react';
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import './QAadd.css'
+import '../page/QAadd.css'
 import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
 import { convertToRaw } from 'draft-js';
-import Container from '@mui/material/Container';
 import draftToHtml from 'draftjs-to-html';
 import { apiCall } from '../Main';
 import Typography from '@mui/material/Typography';
 import DOMPurify from 'dompurify';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ExpertHeader from "../component/ExpertHeader";
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Button from '@mui/material/Button';
-import { alpha, display } from '@mui/system';
+
 const theme = createTheme({
   components: {
     MuiButton: {
@@ -49,19 +45,32 @@ const theme = createTheme({
       main: '#D82148'
     }
   },
-});
-function QAadd() {
-  const navigate = useNavigate();
+}); 
+
+function tagChecked(list, id){
+  for (const tag in list) {
+    if (tag.id === id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+const ReviewQADialog = (props) => {
+  const initalContent = props.clickedItem;
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty()) // ContentState JSON
   const [categories, setCategories] = React.useState([]);
+
   const getCategories = async () => {
-    const data = await apiCall('/categories', 'GET', {}, navigate);
+    const data = await apiCall('/categories', 'GET');
     setCategories(data.categories);
-    const data2 = await apiCall('/tags', 'GET', {}, navigate);
-    data2.tags.map((tag, i) => { tag.checked = false; return tag });
+    const data2 = await apiCall('/tags', 'GET');
+    data2.tags.map((tag, i) => { tagChecked(initalContent.tags, tag.id) === true ? tag.checked = true : tag.checked = false; return tag });
     setSubCategories(data2.tags);
   };
   const [subCategories, setSubCategories] = React.useState([]);
+
   React.useEffect(() => {
     getCategories();
   }, []);
@@ -70,15 +79,14 @@ function QAadd() {
     setEditorState(state);
     convertContentToHTML();
   }
-  const [value, setValue] = React.useState('Covid-19');
-  const [question, setquestion] = React.useState('');
-  const [video, setVideo] = React.useState('');
+  const [value, setValue] = React.useState(initalContent.category.category_name);
+  const [question, setquestion] = React.useState(initalContent.title);
+  const [video, setVideo] = React.useState(initalContent.video_url);
   const handleChange = (event) => {
     setValue(event.target.value);
   };
   const [convertedContent, setConvertedContent] = React.useState(null);
   const convertContentToHTML = () => {
-    console.log(editorState);
     let currentContentAsHTML = convertToRaw(editorState.getCurrentContent());
     const markup = draftToHtml(
       currentContentAsHTML,
@@ -91,6 +99,7 @@ function QAadd() {
       __html: DOMPurify.sanitize(html)
     }
   }
+
   const RadioButtonsGroup = () => {
     return (
       <FormControl>
@@ -110,36 +119,27 @@ function QAadd() {
   }
   const [i, setI] = React.useState(0);
   const setChecked = (value, index) => {
-    console.log(subCategories);
     subCategories[index].checked = value;
-    console.log(subCategories);
-    setI(i + 1);
-
+    setI(i + 1)
   }
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const submitData = {
       body: convertedContent,
       title: question,
       category_id: categories.filter((category) => { return category.category_name === value })[0].id,
-      tag_ids: subCategories.filter((category) => { return category.checked }).map((category) => { return category.id }),
-      video_url: video
-    }
-    const data = await apiCall('/qa', 'POST', submitData, navigate);
-    if (typeof (data) === 'string' && (!data.startsWith('200') || !data.startsWith('201'))) {
+      tag_ids: subCategories.filter((category) => { return category.checked }).map((category) => { return category.id })
 
-      alert('the post can not done');
-    } else {
-      navigate('/expert_main')
     }
+    apiCall('/qa', 'POST', submitData);
 
   }
   const handleSubmitTag = async () => {
     const info = {
       tag_name: tagName
     }
-    await apiCall('/tag', 'POST', info, navigate);
+    await apiCall('/tag', 'POST', info);
     console.log(info);
-    const data2 = await apiCall('/tags', 'GET', navigate);
+    const data2 = await apiCall('/tags', 'GET');
     data2.tags.map((tag, i) => { tag.checked = false; return tag });
     setSubCategories(data2.tags);
     handleClose();
@@ -148,7 +148,7 @@ function QAadd() {
   const CheckBoxButtonsGroup = () => {
     return (
       <FormControl>
-        <FormLabel id="demo-controlled-radio-buttons-group">SubCategory</FormLabel>
+        <FormLabel id="demo-controlled-radio-buttons-group">Sub-Category</FormLabel>
 
         {subCategories.map((cate, i) => {
           if (cate.checked) {
@@ -167,10 +167,8 @@ function QAadd() {
   const [open, setOpen] = React.useState(false);
   const [tagName, setTageName] = React.useState('');
 
-  //<div className="preview" dangerouslySetInnerHTML={createMarkup(convertedContent)}></div>
   return (
     <ThemeProvider theme={theme}>
-      <ExpertHeader />
       <Dialog
         fullWidth={true}
         maxWidth={"lg"}
@@ -207,22 +205,13 @@ function QAadd() {
         </DialogActions>
       </Dialog>
       <div style={{ display: 'flex', marginLeft: '80px', marginTop: '40px' }}>
-        <Typography variant="h3" sx={{ padding: 0, margin: 0 }}>Adding Q and A</Typography>
+        <Typography variant="h3" sx={{ padding: 0, margin: 0 }}>Review the content</Typography>
       </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginRight: '80px' }}>
-        <button style={{}} onClick={handleSubmit}>Submit</button>
-        <button 
-          variant="outlined" 
-          style={{backgroundColor: '#000000', color: 'white', right: '0px'}} 
-          onClick={() => { navigate('/expert_main') }}
-        >
-          Return
-        </button>
-      </div>
-      <div style={{ display: 'flex', marginLeft: '80px', marginRight: '80px', marginTop: '20px', marginBottom: '20px' }}>
-        <div style={{ border: '1px solid gray', height: '700px', borderRadius: '30px', width: '100%', padding: '30px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginRight: '80px' }}><button style={{}} onClick={handleSubmit}>Submit</button></div>
+      <div style={{ display: 'flex', marginLeft: '30px', marginRight: '30px', marginTop: '20px', marginBottom: '20px' }}>
+        <div style={{ border: '1px solid gray', height: '750px', borderRadius: '30px', width: '100%', padding: '30px' }}>
           <div style={{ display: 'flex', width: '100%' }}>
-            <div style={{ flex: 1 }}><RadioButtonsGroup /></div>
+            <div style={{ flex: 1 }}><RadioButtonsGroup/></div>
             <div style={{ flex: 1 }}><CheckBoxButtonsGroup /><button onClick={() => { setOpen(true); }}>Add subcategory</button></div>
             <div style={{ flex: 3, width: '100%' }}>
               <div style={{ marginRight: '15px', color: 'gray' }}>{"Q&A detail:"}</div>
@@ -276,9 +265,7 @@ function QAadd() {
           </div>
         </div>
       </div>
-
-
     </ThemeProvider >
   )
 }
-export default QAadd;
+export default ReviewQADialog;

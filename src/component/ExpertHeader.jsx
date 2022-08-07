@@ -15,7 +15,8 @@ import StarIcon from '@mui/icons-material/Star';
 import CardMedia from '@mui/material/CardMedia';
 import { useNavigate } from 'react-router-dom';
 import { apiCall } from '../Main';
-import MAIN from './img/staff_header.png'
+import MAIN from './img/staff_header.png';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 
 const theme = createTheme({
   palette: {
@@ -65,7 +66,8 @@ export default function ExpertHeader() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => { navigate('/contributor_profile'); handleMenuClose(); }}>My Profile</MenuItem>
+      <MenuItem onClick={() => { navigate('/expert_profile'); handleMenuClose(); }}>My Profile</MenuItem>
+      <MenuItem onClick={() => { navigate('/expert_booked_meeting'); handleMenuClose(); }}>My booked meetings</MenuItem>
       <Divider />
       <MenuItem onClick={() => {
         apiCall('/logout', 'POST', { id: id });
@@ -89,6 +91,22 @@ export default function ExpertHeader() {
             />
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              {localStorage.getItem('name') === 'Administer' ?
+                <IconButton
+                  size="small"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={() => { navigate('/addExpert') }}
+                  color="inherit"
+                >
+                  <SupervisorAccountIcon fontSize="large" />
+                </IconButton>
+                :
+                <></>
+              }
+
               <IconButton
                 size="large"
                 edge="end"
