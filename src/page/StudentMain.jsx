@@ -23,6 +23,9 @@ import WellBeingBot from "../component/WellBeingBot"
 const StudentMain = () => {
 
 	const navigate = useNavigate();
+	if (localStorage.getItem('type') === 'expert') {
+		navigate('/expert_main')
+	}
 	const [categories, setCategories] = React.useState([]);
 	const [showBot, toggleBot] = React.useState(false);
 	const getCategories = async () => {
@@ -40,12 +43,12 @@ const StudentMain = () => {
 			const cProp = {
 				id: c.id,
 				category_name: c.category_name,
-				category_image_url: c.category_image_url,
+				category_image_url: c.category_image_src,
 				category_description: c.category_description,
 				key: i
 			};
 			return (
-				<QACard category={cProp} key={i} image={imageL[i]}></QACard>
+				<QACard category={cProp} key={i} image={cProp.category_image_url}></QACard>
 			)
 		});
 		return (

@@ -1,3 +1,4 @@
+// control action for chatbot
 import { apiCall } from '../../Main';
 import { useNavigate } from 'react-router-dom';
 class ActionProvider {
@@ -121,15 +122,7 @@ class ActionProvider {
     });
     this.setChatbotMessage(message);
   };
-  handleContinue = () => {
-    const message = this.createChatBotMessage(
-      "Which quiz you want to try again?",
-      {
-        widget: "options"
-      }
-    );
-    this.setChatbotMessage(message);
-  };
+
   handleUnknown = () => {
     const message = this.createChatBotMessage(
       "Please type continue to try again"
@@ -140,44 +133,48 @@ class ActionProvider {
 
   handleMeetingMentalHealth = () => {
     const message = this.createChatBotMessage(
-      "You can find some doctors to meet with by click the following link",
+      "You can find some doctors to meet for mental health by click the following link",
       {
         widget: "meetingmentalhealth"
       }
     );
     this.setChatbotMessage(message);
   };
+
   handleMeetingCovid19 = () => {
+    console.log('a??');
     const message = this.createChatBotMessage(
+      "You can find some doctors to meet for covid 19 by click the following link",
       {
-        widget: "meetingmentalhealth"
+        widget: "meetingcovid19"
       }
     );
     this.setChatbotMessage(message);
   };
+
   handleMeetingStayingAtHome = () => {
     const message = this.createChatBotMessage(
-      "You can find some doctors to meet with by click the following link at home",
+      "You can find some doctors to meet for staying at home by click the following link at home",
       {
-        widget: "meetingmentalhealth"
+        widget: "meetingstayathome"
       }
     );
     this.setChatbotMessage(message);
   };
   handleMeetingCareerAdvice = () => {
     const message = this.createChatBotMessage(
-      "You can find some doctors to meet with by click the following link advice",
+      "You can find some doctors to meet for career advice by click the following link advice",
       {
-        widget: "meetingmentalhealth"
+        widget: "meetingcareeradvice"
       }
     );
     this.setChatbotMessage(message);
   };
   handleMeetingVaccation = () => {
     const message = this.createChatBotMessage(
-      "You can find some doctors to meet with by click the following link vaccation",
+      "You can find some doctors to meet for vaccation by click the following link vaccation",
       {
-        widget: "meetingmentalhealth"
+        widget: "meetingmvaccation"
       }
     );
     this.setChatbotMessage(message);

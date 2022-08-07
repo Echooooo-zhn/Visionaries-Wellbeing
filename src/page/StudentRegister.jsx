@@ -23,6 +23,7 @@ import Photo from './img/OIP.jpg'
 import Paper from '@mui/material/Paper';
 import CVDialog from '../component/CVDialog';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const theme = createTheme();
 
@@ -34,8 +35,10 @@ const StudentRegister = () => {
 	const [password, setPassword] = React.useState('');
 	const [name, setName] = React.useState('');
 	const value = 1;
+
 	const register = async () => {
-		// eslint-disable-next-line prefer-regex-literals
+		// When register an new account.
+    // eslint-disable-next-line prefer-regex-literals
 		const reg = new RegExp(/^z+([0-9._-])+@+(ad|student)+(.unsw.edu.au)/);
 		const nameReg = new RegExp(/^[0-9A-Za-z]+ [0-9A-Za-z]+/);
 		if (email === '') {
@@ -65,8 +68,9 @@ const StudentRegister = () => {
 				setOpen(true);
 			} else {
 				localStorage.setItem('token', data.access_token);
-				localStorage.setItem('id', data.user.id)
-				localStorage.setItem('name', data.user.username)
+				localStorage.setItem('id', data.user.id);
+				localStorage.setItem('name', data.user.username);
+				localStorage.setItem('type', data.user.account_type);
 				if (data.user.account_type === 'student') {
 					navigate('/student_main');
 				}
@@ -122,6 +126,12 @@ const StudentRegister = () => {
 						<Typography component="h1" variant="h5">
 							Register
 						</Typography>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', marginTop: '10px' ,width: '100%'}}>
+              
+              <IconButton aria-label="upload picture" component="label" style={{right: '0px'}} onClick={()=>{setDiaOpen(true);}}>
+                <PhotoCamera />
+              </IconButton>
+            </div>
 						<Box component="form" noValidate sx={{ mt: 3 }}>
 							<Grid container spacing={2}>
 								<Grid item xs={12}>
@@ -180,14 +190,10 @@ const StudentRegister = () => {
 						if (newValue === 0) {
 							navigate('/login');
 						}
-						else if (newValue === 2) {
-							setDiaOpen(true);
-						}
 					}}
 				>
 					<BottomNavigationAction label="Login" icon={<LoginIcon />} />
 					<BottomNavigationAction label="Register" icon={<AssignmentIndIcon />} />
-					<BottomNavigationAction label="Upload" icon={<PhotoCamera />} />
 					<CVDialog dialogOpen={dialogOpen} setDiaOpen={setDiaOpen} setName={setName} setEmail={setEmail} setOpen={setOpen} />
 				</BottomNavigation>
 			</Container>
