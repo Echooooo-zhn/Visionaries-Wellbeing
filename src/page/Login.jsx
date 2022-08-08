@@ -21,7 +21,6 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import CardMedia from '@mui/material/CardMedia';
 import Photo from './img/OIP.jpg';
 
-// import CVDialog from '../component/CVDialog';
 
 const theme = createTheme();
 
@@ -53,7 +52,6 @@ const Login = () => {
         password: password,
       }
       const data = await apiCall('/login', 'POST', info, navigate);
-      console.log(data);
       if (typeof (data) === 'string' && (!data.startsWith('200') || !data.startsWith('201'))) {
         setErrorMessage(data.slice(3,));
         setOpen(true);
@@ -70,9 +68,6 @@ const Login = () => {
       }
     }
   }
-
-  // const [dialogOpen, setDiaOpen] = React.useState(false);
-
 
   return (
     <ThemeProvider theme={theme}>

@@ -23,7 +23,6 @@ import Photo from './img/OIP.jpg'
 import Paper from '@mui/material/Paper';
 import CVDialog from '../component/CVDialog';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const theme = createTheme();
 
@@ -37,7 +36,8 @@ const StudentRegister = () => {
 	const value = 1;
 
 	const register = async () => {
-		// When register an new account.
+		// When register an new account chekc the name, email, password
+		// filed has the vlaid format.
     // eslint-disable-next-line prefer-regex-literals
 		const reg = new RegExp(/^z+([0-9._-])+@+(ad|student)+(.unsw.edu.au)/);
 		const nameReg = new RegExp(/^[0-9A-Za-z]+ [0-9A-Za-z]+/);

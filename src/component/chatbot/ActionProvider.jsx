@@ -9,6 +9,7 @@ class ActionProvider {
     this.navigate = useNavigate();
   }
 
+  // Reply the meeting related questions.
   handleMeeting = () => {
     const message = this.createChatBotMessage(
       "Do you want to book a meeting?",
@@ -28,6 +29,7 @@ class ActionProvider {
     this.setChatbotMessage(message);
   }
 
+  // Reply user's questions.
   handleQuestion = async (text) => {
     const data = await apiCall('/chatbot', 'POST', { state: 1, input_text: text }, this.navigate);
     if (typeof (data) === 'string' && (!data.startsWith('200') || !data.startsWith('201'))) {
@@ -42,6 +44,8 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
+  // Reply the user with hte video.
   handleVideos = async () => {
     const send = await apiCall('/chatbot', 'POST', { state: 2, input_text: 'video' })
 
@@ -55,6 +59,7 @@ class ActionProvider {
         widget: "herfWidget"
       }
     );
+    console.log('herfwidge');
     this.setChatbotMessage(message);
     const message7 = this.createChatBotMessage(
       "Do you satisfied with this result or do want want to see some related questions?",
@@ -64,6 +69,8 @@ class ActionProvider {
     );
     this.setChatbotMessage(message7);
   };
+
+  // Reply user's quesiton with hte guide.
   handleGuides = async () => {
     const send = await apiCall('/chatbot', 'POST', { state: 2, input_text: 'guide' })
 
@@ -88,6 +95,8 @@ class ActionProvider {
     );
     this.setChatbotMessage(message3);
   };
+
+  // Reply the user with question content related answer.
   handleRelate = async () => {
     const send = await apiCall('/chatbot', 'POST', { state: 3, input_text: 'related' })
     console.log(send);
@@ -106,9 +115,9 @@ class ActionProvider {
       );
       this.setChatbotMessage(message);
     }
-
-
   };
+
+  // Handle the ask for adding a post.
   handlePost = () => {
     const message = this.createChatBotMessage(
       "Okay, please fill in the form",
@@ -116,6 +125,8 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
+  // Reply the SQL related questions.
   handleSqlQuiz = () => {
     const message = this.createChatBotMessage("Sure! Here's your SQL QUIZ !", {
       widget: "sql"
@@ -123,14 +134,15 @@ class ActionProvider {
     this.setChatbotMessage(message);
   };
 
+  // Reply the unknown questions.
   handleUnknown = () => {
     const message = this.createChatBotMessage(
-      "Please type continue to try again"
+      "Please ask a question"
     );
     this.setChatbotMessage(message);
   };
 
-
+  // Reply with mental health related doctor.
   handleMeetingMentalHealth = () => {
     const message = this.createChatBotMessage(
       "You can find some doctors to meet for mental health by click the following link",
@@ -141,6 +153,7 @@ class ActionProvider {
     this.setChatbotMessage(message);
   };
 
+  // Reply with covid-19 related doctor.
   handleMeetingCovid19 = () => {
     console.log('a??');
     const message = this.createChatBotMessage(
@@ -152,6 +165,7 @@ class ActionProvider {
     this.setChatbotMessage(message);
   };
 
+  // Reply with staying at home related doctor.
   handleMeetingStayingAtHome = () => {
     const message = this.createChatBotMessage(
       "You can find some doctors to meet for staying at home by click the following link at home",
@@ -161,6 +175,8 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
+  // Reply with caree advice related doctor.
   handleMeetingCareerAdvice = () => {
     const message = this.createChatBotMessage(
       "You can find some doctors to meet for career advice by click the following link advice",
@@ -170,6 +186,8 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
+  // Reply the vaccination related doctor.
   handleMeetingVaccation = () => {
     const message = this.createChatBotMessage(
       "You can find some doctors to meet for vaccation by click the following link vaccation",
@@ -180,6 +198,7 @@ class ActionProvider {
     this.setChatbotMessage(message);
   };
 
+  // Reply the greeting message.
   handleGreeting = () => {
     apiCall('/chatbot', 'POST', { state: 3, input_text: 'true' })
     const message = this.createChatBotMessage(
@@ -187,6 +206,7 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
   messageHandler = () => {
     const message = this.createChatBotMessage(
       "Hello, ask me anything",
@@ -194,12 +214,14 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
   handleCancle = () => {
     const message = this.createChatBotMessage(
       "Thanks for trying! Feel free to ask anything!"
     );
     this.setChatbotMessage(message);
   };
+
   handleSorry = () => {
     apiCall('/chatbot', 'POST', { state: 3, input_text: 'false' })
     const message = this.createChatBotMessage(
@@ -207,6 +229,7 @@ class ActionProvider {
     );
     this.setChatbotMessage(message);
   };
+
   setChatbotMessage = (messages) => {
     if (Array.isArray(messages)) {
       this.setState((state) => ({

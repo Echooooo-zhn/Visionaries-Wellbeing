@@ -26,7 +26,6 @@ const StudentFindExpert = () => {
   const { state } = useLocation();
 
   const value = state !== null ? state["date"] : new Date();
-  console.log(value);
   const categoryid = useParams().categoryid;
   const [category, setCategory] = React.useState('');
   const [categoriesName, setCategoriesName] = React.useState([]);
@@ -38,7 +37,7 @@ const StudentFindExpert = () => {
     const data = await apiCall('/categories', 'GET', {}, navigate);
     setCategoriesName(data.categories.map((cate) => { return cate.category_name }));
     setCategoriesId(data.categories.map((cate) => { return cate.id }));
-    const cate = data.categories.filter((cate) => { return cate.id.toString() === categoryid.toString() })[0].category_name
+    const cate = data.categories.filter((cate) => { return cate.id.toString() === categoryid.toString() })[0]
 
     setCategory(cate.category_name);
     setCategoriesImage(cate.category_image_src);
@@ -46,6 +45,7 @@ const StudentFindExpert = () => {
 
   const [experts, setExperts] = React.useState([]);
 
+  // Define the date type.
   Date.prototype.Format = function (fmt) {
     const o = {
       'M+': this.getMonth() + 1,
@@ -68,10 +68,10 @@ const StudentFindExpert = () => {
   };
 
 
+  // Ge the availabilities of the experts.
   const getTimeTable = async () => {
     const datevalue = value.Format('yyyy-MM-dd');
     const data2 = await apiCall(`/get_experts_availabilities_by_week_and_categories?category_ids=${categoryid}&date=${datevalue}`, 'GET', {}, navigate);
-    console.log(data2);
     const l = [];
     data2.result.map((re) => {
       const d = {}
@@ -97,7 +97,6 @@ const StudentFindExpert = () => {
     });
 
     setExperts(l);
-    console.log(l);
   }
   const [i, setI] = React.useState(1);
   if (i === 1) {
@@ -107,6 +106,7 @@ const StudentFindExpert = () => {
     setI(i + 1);
   }
 
+  // Filter the experts by the category.
   const FilterCategory = () => {
     return (
       <Autocomplete
@@ -122,7 +122,7 @@ const StudentFindExpert = () => {
     );
   }
 
-
+  // The input list containes the lanugage choice.
   const InputInList = (propsN) => {
     return (
       <Box
