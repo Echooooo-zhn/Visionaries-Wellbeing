@@ -2,8 +2,8 @@
  * @Author: Echooooo-zhn haonanZHONG17@outlook.com
  * @Date: 2022-08-08 03:06:31
  * @LastEditors: Echooooo-zhn haonanZHONG17@outlook.com
- * @LastEditTime: 2022-08-09 14:06:56
- * @FilePath: \amplifyapp\src\Main.jsx
+ * @LastEditTime: 2022-08-10 14:39:55
+ * @FilePath: \undefinedc:\Users\99489\Desktop\COMP9323\aws\amplifyapp\src\Main.jsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 /* eslint-disable quote-props */
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 export async function apiCall(path, method, body, navigate) {
   console.log(body)
   const token = localStorage.getItem('token');
-  const url = 'http://54.206.26.58:5000/' + path;
+  const url = 'http://localhost:5000/' + path;
   const init = {
     method: method,
     headers: {
