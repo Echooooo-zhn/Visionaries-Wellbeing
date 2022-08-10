@@ -2,7 +2,7 @@
  * @Author: Echooooo-zhn haonanZHONG17@outlook.com
  * @Date: 2022-08-07 22:47:36
  * @LastEditors: Echooooo-zhn haonanZHONG17@outlook.com
- * @LastEditTime: 2022-08-08 06:53:32
+ * @LastEditTime: 2022-08-10 16:08:00
  * @FilePath: \Visionaries\frontend\src\Main.jsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 export async function apiCall(path, method, body, navigate) {
   console.log(body)
   const token = localStorage.getItem('token');
-  const url = 'http://localhost:5000/' + path;
+  const url = 'https://54.206.26.58:5000/' + path;
   const init = {
     method: method,
     headers: {
