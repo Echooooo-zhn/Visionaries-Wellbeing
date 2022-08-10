@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "d8d5a22ae90172000f97",
+    "revision": "01f53060617387a4fdd8",
     "url": "/static/css/main.9672715f.chunk.css"
   },
   {
-    "revision": "d8d5a22ae90172000f97",
-    "url": "/static/js/main.ea94f922.chunk.js"
+    "revision": "01f53060617387a4fdd8",
+    "url": "/static/js/main.a82a12f4.chunk.js"
   },
   {
     "revision": "d5ce5537114c990e7a61",
@@ -92,7 +92,7 @@ self.__precacheManifest = [
     "url": "/static/media/online-doctor-appointment.8f3b0321.png"
   },
   {
-    "revision": "335959a5d2767828c4c7b5c4d0df6854",
+    "revision": "a9b1370e028ea0e15dbbc63c31817603",
     "url": "/index.html"
   }
 ];
