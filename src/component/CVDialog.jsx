@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import EXAMPLE from './img/card_example.png';
 import { styled } from '@mui/material/styles';
 import { apiCall } from '../Main';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Input = styled('input')({
   display: 'none',
@@ -21,6 +22,7 @@ const Input = styled('input')({
 const CVDialog = (props) => {
   
   const [imgSrc, setImgSrc] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleDialogClose = () => {
     setImgSrc("");
@@ -64,6 +66,29 @@ const CVDialog = (props) => {
       }
     }
   }
+
+  const BoxContent = () => {
+    if (imgSrc !== "") {
+      if (loading === true) {
+        return (
+          <><iframe src="https://giphy.com/embed/3oEjI6SIIHBdRxXI40" width="300" height="300" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></>
+        )
+      } else {
+        return (<img height="300px" src={imgSrc} alt={"card_image"} />)
+      }
+    } else {
+      return (
+        <span style={{display: 'flex'}}>
+          <img height="300px"
+            src={EXAMPLE}
+            alt={"card_example"} />
+          <h5 style={{fontWeight:'bold', alignSelf: 'center', marginLeft: '10px'}}>
+            Please following this template
+          </h5>
+        </span>
+      )
+    }
+  }
   
   // The box contains the template image or uploaded image.
   const CardTextDetectBox = () => {
@@ -73,20 +98,7 @@ const CVDialog = (props) => {
           Choose Your ID Card Image Here
         </Typography>
         <Box sx={{height: '310px', borderStyle: 'dashed'}}>
-          { imgSrc !== ""
-            ? <img height="300px"
-              src={imgSrc}
-              alt={"card_image"} />
-            
-            : <span style={{display: 'flex'}}>
-                <img height="300px"
-                  src={EXAMPLE}
-                  alt={"card_example"} />
-                <h5 style={{fontWeight:'bold', alignSelf: 'center', marginLeft: '10px'}}>
-                  Please following this template
-                </h5>
-              </span> 
-          }
+          <BoxContent />
         </Box>
         <Button variant="contained" style={{marginTop: '20px'}}>
           <label htmlFor="icon-button-file">
@@ -119,7 +131,7 @@ const CVDialog = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => { handleDialogClose() }}>CANCLE</Button>
-        <Button onClick={() => { getCardContext() }}>SUMBIT</Button>
+        <Button onClick={() => { setLoading(true); getCardContext() }}>SUMBIT</Button>
       </DialogActions>
     </Dialog>  
   )
