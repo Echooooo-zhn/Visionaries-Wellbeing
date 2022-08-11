@@ -152,7 +152,7 @@ const ReviewQADialog = (props) => {
 
     }
     apiCall(`/qa/${initalContent.rid}`, 'PUT', submitData);
-
+    handleClose();
   }
   const handleSubmitTag = async () => {
     const info = {

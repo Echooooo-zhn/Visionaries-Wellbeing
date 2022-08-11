@@ -98,6 +98,7 @@ const ReviewPost = () => {
           tag_ids: item.tags,
           title: item.title,
         }
+        console.log(item, "item");
         const id_int = parseInt(item.id)
         const data = await apiCall(`qa/${id_int}`, 'PUT', info, navigate);
         if (typeof (data) === 'string' && (! data.startsWith('200') || ! data.startsWith('201'))) {
